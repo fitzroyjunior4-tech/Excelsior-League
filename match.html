@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Match — Excelsior League</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A0D14">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">
+      <img src="icons/icon-192.png" alt="" class="js-site-logo">
+      <span><span class="accent js-site-name">Excelsior</span> League</span>
+    </a>
+    <button class="nav__toggle" id="nav-toggle" aria-label="Menu">☰</button>
+    <div class="nav__links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="fixtures.html">Fixtures</a>
+      <a href="table.html">Table</a>
+      <a href="stats.html">Stats</a>
+      <a href="teams.html">Teams</a>
+      <a href="news.html">News</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </div>
+</nav>
+
+<div class="live-banner" id="live-banner">
+  <div class="live-banner__inner">
+    <span class="live-banner__tag">● Live now</span>
+    <span class="live-banner__text" id="live-banner-text"></span>
+    <button class="live-banner__close" id="live-banner-close" aria-label="Dismiss">✕</button>
+  </div>
+</div>
+
+<main class="wrap" style="padding-top:26px;">
+  <div id="match-content"></div>
+</main>
+
+<footer class="site-footer"><span class="js-site-name">Excelsior</span> Club Sunday League</footer>
+
+<script type="module" src="js/live-banner.js"></script>
+<script src="js/nav.js"></script>
+<script type="module" src="js/match.js"></script>
+</body>
+</html>

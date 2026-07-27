@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Excelsior League</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A0D14">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">
+      <img src="icons/icon-192.png" alt="" class="js-site-logo">
+      <span><span class="accent js-site-name">Excelsior</span> League</span>
+    </a>
+    <button class="nav__toggle" id="nav-toggle" aria-label="Menu">☰</button>
+    <div class="nav__links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="fixtures.html">Fixtures</a>
+      <a href="table.html">Table</a>
+      <a href="stats.html">Stats</a>
+      <a href="teams.html">Teams</a>
+      <a href="news.html">News</a>
+      <a href="admin.html" class="active">Admin</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap" style="padding-top:28px; padding-bottom:60px;">
+
+  <!-- LOGIN -->
+  <div class="login-box" id="login-view">
+    <h2>Admin Login</h2>
+    <form id="login-form">
+      <div class="field"><label for="login-email">Email</label><input type="email" id="login-email" required></div>
+      <div class="field"><label for="login-password">Password</label><input type="password" id="login-password" required></div>
+      <p class="error-text" id="login-error"></p>
+      <button class="btn" type="submit">Log In</button>
+    </form>
+    <p class="help-text">Admin accounts are created in the Firebase console — see README.md.</p>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard-view" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h1 style="font-size:1.3rem;">Admin Dashboard</h1>
+      <button class="btn btn--secondary btn--sm" id="logout-btn">Log Out</button>
+    </div>
+
+    <div class="admin-shell">
+      <div class="admin-tabs" role="tablist">
+        <button class="admin-tab" data-tab="settings" aria-selected="true">Site Settings</button>
+        <button class="admin-tab" data-tab="teams" aria-selected="false">Teams</button>
+        <button class="admin-tab" data-tab="players" aria-selected="false">Players</button>
+        <button class="admin-tab" data-tab="fixtures" aria-selected="false">Fixtures</button>
+        <button class="admin-tab" data-tab="news" aria-selected="false">News</button>
+      </div>
+
+      <div class="admin-panel">
+
+        <!-- SETTINGS -->
+        <div id="panel-settings">
+          <h2>Site Settings</h2>
+          <form id="settings-form">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="settings-name">Club Name</label>
+                <input type="text" id="settings-name" placeholder="e.g. Excelsior Club">
+              </div>
+              <div class="field">
+                <label>Current Logo</label>
+                <img id="settings-logo-preview" class="logo-preview" src="icons/icon-192.png" alt="Logo preview">
+              </div>
+              <div class="field">
+                <label for="settings-logo-file">Upload New Logo</label>
+                <input type="file" id="settings-logo-file" accept="image/*">
+                <span class="help-text">This updates the logo shown across the site. To also change the app icon used when someone installs the PWA, replace the files in icons/ — see README.md.</span>
+              </div>
+            </div>
+            <button class="btn" type="submit">Save Settings</button>
+            <span class="help-text" id="settings-status"></span>
+          </form>
+        </div>
+
+        <!-- TEAMS -->
+        <div id="panel-teams" style="display:none;">
+          <h2>Teams</h2>
+          <form id="team-form">
+            <input type="hidden" id="team-id">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="team-name">Team Name</label>
+                <input type="text" id="team-name" required>
+              </div>
+              <div class="field">
+                <label>Current Logo</label>
+                <img id="team-logo-preview" class="logo-preview" src="icons/icon-192.png" alt="Team logo preview">
+              </div>
+              <div class="field">
+                <label for="team-logo-file">Upload Logo</label>
+                <input type="file" id="team-logo-file" accept="image/*">
+              </div>
+            </div>
+            <button class="btn" type="submit" id="team-submit-btn">Add Team</button>
+            <button class="btn btn--secondary" type="button" id="team-cancel-btn" style="display:none;">Cancel Edit</button>
+          </form>
+          <hr style="margin:24px 0; border:none; border-top:1px solid var(--line);">
+          <div id="teams-admin-list"></div>
+        </div>
+
+        <!-- PLAYERS -->
+        <div id="panel-players" style="display:none;">
+          <h2>Players</h2>
+          <form id="player-form">
+            <input type="hidden" id="player-id">
+            <div class="form-grid">
+              <div class="field">
+                <label for="player-team">Team</label>
+                <select id="player-team" required></select>
+              </div>
+              <div class="field">
+                <label for="player-name">Name</label>
+                <input type="text" id="player-name" required>
+              </div>
+              <div class="field">
+                <label for="player-number">Number</label>
+                <input type="number" id="player-number" min="0">
+              </div>
+              <div class="field">
+                <label for="player-position">Position</label>
+                <input type="text" id="player-position" placeholder="e.g. Forward">
+              </div>
+              <div class="field">
+                <label>Current Photo</label>
+                <img id="player-photo-preview" class="photo-preview" src="icons/icon-192.png" alt="Player photo preview">
+              </div>
+              <div class="field">
+                <label for="player-photo-file">Upload Photo</label>
+                <input type="file" id="player-photo-file" accept="image/*">
+              </div>
+              <div class="field">
+                <label for="player-goals">Goals</label>
+                <input type="number" id="player-goals" min="0" value="0">
+              </div>
+              <div class="field">
+                <label for="player-assists">Assists</label>
+                <input type="number" id="player-assists" min="0" value="0">
+              </div>
+              <div class="field">
+                <label for="player-yellow">Yellow Cards</label>
+                <input type="number" id="player-yellow" min="0" value="0">
+              </div>
+              <div class="field">
+                <label for="player-red">Red Cards</label>
+                <input type="number" id="player-red" min="0" value="0">
+              </div>
+              <div class="field">
+                <label for="player-rating">Rating (e.g. 7.2)</label>
+                <input type="number" id="player-rating" min="0" max="10" step="0.1">
+              </div>
+            </div>
+            <button class="btn" type="submit" id="player-submit-btn">Add Player</button>
+            <button class="btn btn--secondary" type="button" id="player-cancel-btn" style="display:none;">Cancel Edit</button>
+          </form>
+          <hr style="margin:24px 0; border:none; border-top:1px solid var(--line);">
+          <div class="filters" id="players-team-filter"></div>
+          <div id="players-admin-list"></div>
+        </div>
+
+        <!-- FIXTURES -->
+        <div id="panel-fixtures" style="display:none;">
+          <h2>Fixtures</h2>
+          <form id="fixture-form">
+            <input type="hidden" id="fixture-id">
+            <div class="form-grid">
+              <div class="field">
+                <label for="fixture-teamA">Team A</label>
+                <select id="fixture-teamA" required></select>
+              </div>
+              <div class="field">
+                <label for="fixture-teamB">Team B</label>
+                <select id="fixture-teamB" required></select>
+              </div>
+              <div class="field">
+                <label for="fixture-date">Date &amp; Time</label>
+                <input type="datetime-local" id="fixture-date" required>
+              </div>
+              <div class="field">
+                <label for="fixture-venue">Venue</label>
+                <input type="text" id="fixture-venue">
+              </div>
+              <div class="field">
+                <label for="fixture-status">Status</label>
+                <select id="fixture-status">
+                  <option value="scheduled">Scheduled</option>
+                  <option value="first_half">1st Half</option>
+                  <option value="half_time">Half-Time</option>
+                  <option value="second_half">2nd Half</option>
+                  <option value="full_time">Full-Time</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="fixture-minute">Current Minute (while live)</label>
+                <input type="number" id="fixture-minute" min="0" max="100">
+              </div>
+              <div class="field">
+                <label>Score</label>
+                <div style="display:flex; gap:8px;">
+                  <input type="number" id="fixture-scoreA" placeholder="A" min="0">
+                  <input type="number" id="fixture-scoreB" placeholder="B" min="0">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field full">
+                <label id="lineupA-label">Team A — Starting 8</label>
+                <div class="checklist" id="lineupA-starting"></div>
+                <label id="benchA-label" style="margin-top:8px;">Team A — Bench</label>
+                <div class="checklist" id="lineupA-bench"></div>
+              </div>
+              <div class="field full">
+                <label id="lineupB-label">Team B — Starting 8</label>
+                <div class="checklist" id="lineupB-starting"></div>
+                <label id="benchB-label" style="margin-top:8px;">Team B — Bench</label>
+                <div class="checklist" id="lineupB-bench"></div>
+              </div>
+            </div>
+
+            <div class="field full" style="margin-bottom:16px;">
+              <label>Match Events</label>
+              <div id="events-editor-rows"></div>
+              <button type="button" class="btn btn--secondary btn--sm" id="event-add-row" style="margin-top:6px; align-self:flex-start;">+ Add Event</button>
+            </div>
+
+            <button class="btn" type="submit" id="fixture-submit-btn">Add Fixture</button>
+            <button class="btn btn--secondary" type="button" id="fixture-cancel-btn" style="display:none;">Cancel Edit</button>
+          </form>
+
+          <hr style="margin:24px 0; border:none; border-top:1px solid var(--line);">
+          <div id="fixtures-admin-list"></div>
+        </div>
+
+        <!-- NEWS -->
+        <div id="panel-news" style="display:none;">
+          <h2>News</h2>
+          <form id="news-form">
+            <div class="form-grid">
+              <div class="field full"><label for="news-title">Title</label><input type="text" id="news-title" required></div>
+              <div class="field full"><label for="news-body">Article</label><textarea id="news-body" required style="min-height:140px;"></textarea></div>
+            </div>
+            <button class="btn" type="submit">Post Article</button>
+          </form>
+          <hr style="margin:24px 0; border:none; border-top:1px solid var(--line);">
+          <div id="news-admin-list"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="js/nav.js"></script>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>
